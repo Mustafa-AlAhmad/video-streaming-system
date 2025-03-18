@@ -1,0 +1,28 @@
+package com.app.auth.controller;
+
+import com.app.auth.model.User;
+import com.app.auth.service.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+
+    private final AuthService authService;
+
+    @Autowired
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/register")
+    public String register(@RequestBody User user) {
+        return authService.register(user);
+    }
+
+    @GetMapping("/login")
+    public Boolean login(@RequestParam String username, @RequestParam String password) {
+        return authService.validateUser(username, password);
+    }
+}

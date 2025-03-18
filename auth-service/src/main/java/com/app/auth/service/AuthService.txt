@@ -1,0 +1,46 @@
+package com.app.auth.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+
+@Service
+public class AuthService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
+
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    public AuthService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
+
+    public String register(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            logger.warn("Registration failed: Username {} already exists", user.getUsername());
+            return "Username already exists!";
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encrypt password before saving
+        userRepository.save(user);
+
+        logger.info("User registered successfully: {}", user.getUsername());
+        return "User registered successfully!";
+    }
+
+    public boolean validateUser(String username, String password) {
+        Optional<User> foundUser = userRepository.findByUsername(username);
+        if (foundUser.isPresent() && passwordEncoder.matches(password, foundUser.get().getPassword())) {
+            logger.info("User authenticated: {}", username);
+            return true;
+        }
+        logger.warn("Invalid credentials for user: {}", username);
+        return false;
+    }
+}

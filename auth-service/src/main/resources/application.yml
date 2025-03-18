@@ -1,0 +1,26 @@
+server:
+  port: 8085
+
+spring:
+  datasource:
+    url: jdbc:mysql://mysql:3306/auth_db
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # (Use 'validate' in production)
+    show-sql: true
+    database: mysql
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'  # 🔥 Expose all Actuator endpoints
+  endpoint:
+    health:
+      show-details: always  # 🔥 Show DB & Service health details
+    mappings:
+      enabled: true  # 🔥 Ensure we can see mappings

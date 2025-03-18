@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: video_streaming
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  auth-service:
+    build: ./auth-service
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/video_streaming
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+    ports:
+      - "8085:8085"
+
+  file-system-service:
+    build: ./file-system-service
+    restart: always
+    ports:
+      - "8083:8083"
+    volumes:
+      - video_storage:/videos  # ✅ SHARED STORAGE
+    environment:
+      VIDEO_UPLOAD_DIR: /videos
+
+  upload-video-service:
+    build: ./upload-video-service
+    restart: always
+    depends_on:
+      - mysql
+      - auth-service
+      - file-system-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/video_streaming
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+      VIDEO_UPLOAD_DIR: /videos/uploads  # ✅ FIXED UPLOAD DIRECTORY
+    ports:
+      - "8081:8081"
+    volumes:
+      - video_storage:/videos  # ✅ UPLOAD SERVICE USES THE SAME STORAGE
+
+  streaming-video-service:
+    build: ./streaming-video-service
+    restart: always
+    depends_on:
+      - mysql
+      - file-system-service
+      - upload-video-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/video_streaming
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+      VIDEO_STREAM_DIR: /videos/uploads  # ✅ FIXED STREAMING DIRECTORY
+    ports:
+      - "8082:8082"
+    volumes:
+      - video_storage:/videos  # ✅ STREAMING SERVICE NOW SEES THE FILES
+
+volumes:
+  mysql_data:
+  video_storage:  # ✅ SHARED STORAGE FOR ALL SERVICES

@@ -1,0 +1,21 @@
+server:
+  port: 8082  # ✅ Keep this as it is
+
+spring:
+  datasource:
+    url: jdbc:mysql://mysql:3306/video_streaming
+    username: ${DB_USER}  # ✅ Now uses environment variable from .env
+    password: ${DB_PASS}  # ✅ Now uses environment variable from .env
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database: mysql
+
+service:
+  auth:
+    url: http://authentication-service:8080/auth/login
+  file-system:
+    url: http://file-system-service:8083/files/get
