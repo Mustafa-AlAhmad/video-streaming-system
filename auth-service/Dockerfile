@@ -1,5 +1,5 @@
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY ./target/auth-service-*.jar auth-service.jar
+COPY target/*.jar app.jar
 EXPOSE 8085
 ENTRYPOINT ["java", "-jar", "auth-service.jar"]
