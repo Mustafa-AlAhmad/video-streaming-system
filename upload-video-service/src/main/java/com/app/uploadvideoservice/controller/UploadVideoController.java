@@ -14,7 +14,7 @@ import java.io.IOException;
 @RequestMapping("/upload")
 public class UploadVideoController {
 
-    @Value("${video.upload.dir:/videos}")  // ✅ FIXED THE PATH
+    @Value("${video.upload.dir:/videos}")
     private String uploadDir;
 
     private final VideoRepository videoRepository;
@@ -27,24 +27,21 @@ public class UploadVideoController {
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file,
                                                    @RequestParam String name) {
         try {
-            // ✅ ENSURE UPLOAD DIRECTORY EXISTS
-            File uploadPath = new File(uploadDir + "/uploads");  // ✅ NOW IT GOES TO `/videos/uploads`
+            File uploadPath = new File(uploadDir + "/uploads");
             if (!uploadPath.exists()) {
                 uploadPath.mkdirs();
             }
 
-            // ✅ SAVE FILE IN `/videos/uploads`
             File destinationFile = new File(uploadPath, name + ".mp4");
             file.transferTo(destinationFile);
 
-            // ✅ STORE METADATA IN DB
             Video video = new Video(name, "uploads");
             videoRepository.save(video);
 
-            return ResponseEntity.ok("🔥🔥 Video uploaded successfully to: " + destinationFile.getAbsolutePath() + " 🔥🔥");
+            return ResponseEntity.ok("Video uploaded successfully to: " + destinationFile.getAbsolutePath());
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("💀 Error uploading file: " + e.getMessage());
+                    .body("Error uploading file: " + e.getMessage());
         }
     }
 }

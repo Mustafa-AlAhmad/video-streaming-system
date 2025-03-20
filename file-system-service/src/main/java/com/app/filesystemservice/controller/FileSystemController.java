@@ -1,4 +1,4 @@
-package com.app.filesystem.controller;
+package com.app.filesystemservice.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -31,7 +31,7 @@ public class FileSystemController {
         try {
             String fileName = name + ".mp4";
             Path destinationDirectory = Path.of(uploadDir, path);
-            Files.createDirectories(destinationDirectory); // Ensures the directory exists
+            Files.createDirectories(destinationDirectory);
 
             Path destinationFilePath = destinationDirectory.resolve(fileName);
             Files.copy(file.getInputStream(), destinationFilePath, StandardCopyOption.REPLACE_EXISTING);

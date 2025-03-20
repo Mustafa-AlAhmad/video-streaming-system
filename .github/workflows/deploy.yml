@@ -8,13 +8,13 @@ on:
 
 jobs:
   deploy:
-    name: 🚀 Deploy to Server
+    name: Deploy to Server
     runs-on: ubuntu-latest
 
     steps:
-      - name: ⬇️ Checkout Repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: 🔄 Pull New Images & Restart Services
+      - name: Pull New Images & Restart Services
         run: |
           ssh user@server "docker-compose pull && docker-compose up -d --force-recreate"

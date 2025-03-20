@@ -14,23 +14,23 @@ import java.io.File;
 @RequestMapping("/stream")
 public class VideoStreamingController {
 
-    private static final String VIDEO_DIRECTORY = "/app/videos/uploads";  // ✅ FIXED PATH
+    private static final String VIDEO_DIRECTORY = "/app/videos/uploads";
 
-    @GetMapping("/{filename:.+}")  // 🔥 FIX: Supports filenames with dots
+    @GetMapping("/{filename:.+}")
     public ResponseEntity<Resource> streamVideo(@PathVariable String filename) {
-        System.out.println("🔥🔥🔥 REQUEST RECEIVED: " + filename + " 🔥🔥🔥");
+        System.out.println(" REQUEST RECEIVED: " + filename);
 
         File videoFile = new File(VIDEO_DIRECTORY, filename);
-        System.out.println("📂 Searching for file: " + videoFile.getAbsolutePath());
+        System.out.println("Searching for file: " + videoFile.getAbsolutePath());
 
         if (!videoFile.exists()) {
-            System.out.println("❌ FILE NOT FOUND: " + filename);
+            System.out.println("FILE NOT FOUND: " + filename);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
                     .body(null);
         }
 
-        System.out.println("✅ FILE FOUND! STREAMING: " + filename);
+        System.out.println("FILE FOUND! STREAMING: " + filename);
         Resource videoResource = new FileSystemResource(videoFile);
 
         return ResponseEntity.ok()
