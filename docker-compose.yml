@@ -9,7 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
       MYSQL_DATABASE: video_streaming
     ports:
-      - "3306:3306"
+      - "3308:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -31,9 +31,9 @@ services:
     ports:
       - "8083:8083"
     volumes:
-      - video_storage:/videos  # ✅ SHARED STORAGE
+      - video_storage:/app/videos  # ✅ VIDEO FILES NOW STORED IN PROJECT ROOT
     environment:
-      VIDEO_UPLOAD_DIR: /videos
+      VIDEO_UPLOAD_DIR: /app/videos  # ✅ ROOT DIRECTORY FIXED
 
   upload-video-service:
     build: ./upload-video-service
@@ -46,11 +46,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/video_streaming
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
-      VIDEO_UPLOAD_DIR: /videos/uploads  # ✅ FIXED UPLOAD DIRECTORY
+      VIDEO_UPLOAD_DIR: /app/videos  # ✅ UPLOADS NOW GO DIRECTLY TO PROJECT ROOT
     ports:
       - "8081:8081"
     volumes:
-      - video_storage:/videos  # ✅ UPLOAD SERVICE USES THE SAME STORAGE
+      - video_storage:/app/videos
 
   streaming-video-service:
     build: ./streaming-video-service
@@ -63,12 +63,12 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/video_streaming
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
-      VIDEO_STREAM_DIR: /videos/uploads  # ✅ FIXED STREAMING DIRECTORY
+      VIDEO_STREAM_DIR: /app/videos/uploads  # ✅ FIXED PATH!
     ports:
       - "8082:8082"
     volumes:
-      - video_storage:/videos  # ✅ STREAMING SERVICE NOW SEES THE FILES
+      - video_storage:/app/videos  # ✅ STREAMING SERVICE NOW SEES FILES!
 
 volumes:
   mysql_data:
-  video_storage:  # ✅ SHARED STORAGE FOR ALL SERVICES
+  video_storage:  # ✅ SHARED VOLUME, ROOT DIRECTORY FIXED

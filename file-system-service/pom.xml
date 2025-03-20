@@ -66,7 +66,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.app.auth.FileSystemServiceApplication</mainClass>
+                    <mainClass>com.app.filesystemservice.FileSystemServiceApplication</mainClass>
                 </configuration>
             </plugin>
 

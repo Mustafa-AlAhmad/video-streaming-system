@@ -75,7 +75,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>com.app.auth.UploadVideoServiceApplication</mainClass>
+					<mainClass>com.app.uploadvideoservice.UploadVideoServiceApplication</mainClass>
 				</configuration>
 			</plugin>
 

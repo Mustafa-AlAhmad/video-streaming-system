@@ -1,5 +1,5 @@
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY target/*.jar app.jar
+COPY target/upload-video-service-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8081
-ENTRYPOINT ["java", "-jar", "upload-video-service.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

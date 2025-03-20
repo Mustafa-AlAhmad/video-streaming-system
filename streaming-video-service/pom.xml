@@ -75,7 +75,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.app.auth.StreamingVideoServiceApplication</mainClass>
+                    <mainClass>com.app.streamingvideoservice.StreamingVideoServiceApplication</mainClass>
                 </configuration>
             </plugin>
 

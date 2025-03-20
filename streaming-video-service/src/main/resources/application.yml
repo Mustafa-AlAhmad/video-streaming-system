@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://mysql:3306/video_streaming
-    username: ${DB_USER}  # ✅ Now uses environment variable from .env
-    password: ${DB_PASS}  # ✅ Now uses environment variable from .env
+    url: jdbc:mysql://video-streaming-system-mysql-1:3306/video_streaming
+    username: root
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
